@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Customer>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h3>
+                <span class="iconify" data-icon="raphael:customer" data-inline="false" data-width="28" data-height="28"></span>
+                Klienci
+            </h3>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-action="Create" class="btn btn-info">&nbsp;&nbsp;<i class="fas fa-plus"></i>&nbsp;&nbsp;Dodaj&nbsp;&nbsp;</a>
+        </div>
+    </div>
+    <br />
+    <div>
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr align="center">
+                    <th>
+                        Klient
+                    </th>
+                    <th>
+                        Numer telefonu
+                    </th>
+                    <th>
+                        E-mail
+                    </th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => item.Name)&nbsp;
+                        </td>
+                        <td align="center">
+                            @Html.DisplayFor(m => item.Phone)
+                        </td>
+                        <td align="right">
+                            @Html.DisplayFor(m => item.EMail)
+                        </td>
+                        <td align="right">
+                            <partial name="_TableButtonPartial" model="item.Id" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+

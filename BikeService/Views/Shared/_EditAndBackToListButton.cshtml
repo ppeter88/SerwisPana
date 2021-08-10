@@ -1,0 +1,14 @@
+﻿@model int
+
+<div class="row">
+    <div class="col-6">
+        <a asp-action="Index" class="btn btn-secondary form-control">
+            <i class="fas fa-arrow-left"></i>&nbsp;&nbsp;Wstecz
+        </a>
+    </div>
+    <div class="col-6">
+        <button type="submit" class="btn btn-success form-control" asp-route-id="@Model" value="Edit">
+            <i class="far fa-save"></i>&nbsp;&nbsp;Zapisz
+        </button>
+    </div>  
+</div>

@@ -1,0 +1,131 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- SIDEBAR -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/css/searchBar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+
+    <title>@ViewData["Title"] - BikeService</title>
+
+</head>
+<body>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>SerwisPana</h3>
+                </div>
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Zlecenia</a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu">
+                            <li>
+                                @Html.ActionLink("Nowe", "Index", "Request", new { status = 1 }, null)
+                            </li>
+                            <li>
+                                @Html.ActionLink("W toku", "Index", "Request", new { status = 2 }, null)
+                            </li>
+                            <li>
+                                @Html.ActionLink("Zrobione", "Index", "Request", new { status = 3 }, null)
+                            </li>
+                            <li>
+                                @Html.ActionLink("Zamknięte", "Index", "Request", new { status = 4 }, null)
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Customer" asp-area="Serviceman">Klienci</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Service" asp-area="Admin">Usługi</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="User" asp-area="Admin">Użytkownicy</a>
+                    </li>
+                    <li>
+                        <a href="#">Statystyki</a>
+                    </li>
+                </ul>
+
+                <ul class="list-unstyled CTAs">
+                    <li>
+
+                        <a asp-action="Create" asp-controller="Request" asp-area="Serviceman" class="download">
+                            <i class="fas fa-plus"></i>&nbsp;Dodaj
+                            @*<span class="iconify" data-icon="icons8:services" data-inline="false" data-width="22" data-height="22"></span>&nbsp;Dodaj*@
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="content w-100">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a href="#">
+                        <img src="Images/pan-removebg-preview.png" id="sidebarCollapse" width="50" height="50" alt="BIKESERVICE" />
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse pagination justify-content-end" id="navbarNav">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </nav>
+
+                <div class="content-wrapper">
+                    <main role="main" class="pb-3">
+                        @RenderBody()
+                    </main>
+                </div>
+
+                <footer class="border-top footer text-muted">
+                    <div class="container">
+                        &copy; byPePe
+                    </div>
+                </footer>
+            </div>
+        </div>
+    }
+    else
+    {
+        @*<partial name="_LoginPartial" />*@
+        @*<div class="content-wrapper">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>*@
+        @RenderBody()
+
+    }
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    <script src="https://kit.fontawesome.com/519602a075.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/nyq4c5fgoz43aa874gob08o46mlx7zbpw8lz5go3te1400g7/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.magnific-popup.js"></script>
+    <script type="text/javascript" src="~/js/ViewImages.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#sidebarCollapse").on('click', function () {
+                $("#sidebar").toggleClass('active');
+            })
+        })
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

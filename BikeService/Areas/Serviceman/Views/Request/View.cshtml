@@ -1,0 +1,159 @@
+﻿@model BikeService.Models.ViewModels.RequestWithPos
+@using BikeService.Extensions
+@{
+    ViewData["Title"] = "Podgląd zlecenia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int customerId = Model.Request.Customer.Id;
+    string customer = Model.Request.Customer.Name;
+    string assignee = Model.Request.EmployeeAssignee.Name + " " + Model.Request.EmployeeAssignee.Surname;
+    string reporter = Model.Request.EmployeeReporter.Name + " " + Model.Request.EmployeeReporter.Surname;
+    int cnt = 0;
+}
+
+<form method="post" asp-action="Edit" enctype="multipart/form-data" >
+    <div class="backgroundWhite">
+        <h3>
+            <span class="iconify" data-icon="icons8:services" data-inline="false" data-width="28" data-height="28"></span>&nbsp;
+            Podgląd zlecenia
+        </h3>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <br />
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Status" class="col-form-label">Status</label>
+            </div>
+            <div class="col-md-2">
+                <input class="form-control" id="Status" name="Status" value="@Model.Request.Status.Name" readonly />
+                <input asp-for="Request.StatusId" hidden />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Symbol" class="col-form-label">Symbol</label>
+            </div>
+            <div class="col-md-4">
+                <input asp-for="Request.Symbol" class="form-control" id="Symbol" readonly style="background: #ffffff" readonly />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Data" class="col-form-label">Data</label>
+            </div>
+            <div class="col-md-4">
+                <input asp-for="Request.Date" class="form-control" id="Data" readonly />
+                <span asp-validation-for="Request.Date" class="text-danger"></span>
+            </div>
+        </div>
+        <hr class="offset-3 col-6">
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="CustomerName" class="col-form-label">Klient</label>
+            </div>
+            <div class="sbar col-md-6">
+                <div class="search-input">
+                    <input class="form-control" id="CustomerName" name="CustomerName" type="text" value="@Model.Request.Customer.Name" readonly />
+                    <input class="form-control" id="CustomerId" name="CustomerId" type="text" value="@Model.Request.CustomerId" hidden />
+                    <div class="autocom-box" id="autocombo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Phone" class="col-form-label">Telefon</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" id="Phone" name="Phone" value="@Model.Customer.Phone" readonly />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Email" class="col-form-label">E-mail</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" id="Email" name="Email" value="@Model.Customer.EMail" readonly />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="ReporterId" class="col-form-label">Przyjął</label>
+            </div>
+            <div class="col-md-4">
+                <select id="ReporterId" asp-for="Request.Reporter" asp-items="Model.Reporter.ToSelectListItem(Model.Request.Reporter, 1)" class="form-control" data-val="false" disabled></select>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="AssigneeId" class="col-form-label">Osoba przypisana</label>
+            </div>
+            <div class="col-md-4">
+                <select id="AssigneeId" asp-for="Request.Assignee" asp-items="Model.Reporter.ToSelectListItem(Model.Request.Assignee, 1)" class="form-control" data-val="false" disabled></select>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="PriorityLine" class="col-form-label">Pilne</label>
+            </div>
+            <div class="col-md-1 text-left">
+                <input asp-for="Request.PriorityLine" class="form-control" id="PriorityLine" name="PriorityLine" type="checkbox" disabled />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label class="col-form-label">Zdjęcia</label>
+            </div>
+            <div class="col-md-3 parent-container">
+                @foreach (var photo in Model.Images)
+                {
+                    if (cnt == 0)
+                    {
+                        <a class="btn btn-light text-dark form-control" href="@photo.Path">
+                            <span class="iconify" data-icon="bx:bx-image" data-inline="false" data-width="26" data-height="26"></span>
+                            Wyświetl
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@photo.Path"> </a>
+                    }
+                    cnt++;
+                }
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Descript" class="col-form-label">Uwagi</label>
+            </div>
+            <div class="col-md-6">
+                <textarea rows="13" asp-for="Request.Description" class="form-control" id="Descript" readonly></textarea>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="GrossValue" class="col-form-label">Wartość [zł]</label>
+            </div>
+            <div class="col-md-2">
+                <input pattern="[0-9]+([.][0-9]+)?" asp-for="Request.GrossValue" class="form-control" id="GrossValue" title="W polu wymagana jest wartość liczbowa, separatorem dziesiętnym jest '.'" style="text-align:right" readonly>
+            </div>
+        </div>
+        <div class="form-group row">
+            <partial name="_CreateAndBackToListButtonForRequest" />
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+
+    @* Pole tekstowe z formatowaniem tekstu *@
+    <script>
+        tinymce.init({
+            selector: "textarea",
+            plugins: "lists",
+            menubar: 'file edit format',
+            readonly: true
+        });
+    </script>
+
+    <script type="text/javascript" src="~/js/searchBarScript.js"></script>
+
+}

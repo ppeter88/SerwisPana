@@ -1,0 +1,38 @@
+﻿@model Service
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Edycja usługi</h3>
+
+<form method="post" asp-action="View">
+    <div class="backgroundWhite">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <div class="form-group col-md-6 ">
+                <label for="ServiceName" class="col-form-label">Nazwa</label>
+                <input asp-for="Name" class="form-control" id="ServiceName" readonly/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <label for="PriceNet" class="col-form-label">Netto</label>
+                <input type="number" asp-for="PriceNet" class="form-control" id="PriceNet" placeholder="0.00" readonly/>
+            </div>
+            <div class="col-md-3">
+                <label for="PriceGross" class="col-form-label">Brutto</label>
+                <input type="number" asp-for="PriceGross" class="form-control" id="PriceGross" placeholder="0.00" readonly/>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-md-6">
+                <partial name="_BackButton" model="Model.Id"/>
+            </div>
+        </div>
+    </div>
+</form>
+

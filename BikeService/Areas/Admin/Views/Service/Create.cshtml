@@ -1,0 +1,44 @@
+﻿@model Service
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" asp-action="Create">
+    <div class="backgroundWhite">
+        <h3>
+            <span class="iconify" data-icon="ic:outline-home-repair-service" data-inline="false" data-width="28" data-height="28"></span>&nbsp;
+            Nowa usługa
+        </h3>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <div class="form-group col-md-6 ">
+                <label for="ServiceName" class="col-form-label">Nazwa</label>
+                <input asp-for="Name" class="form-control" id="ServiceName" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>   
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <label for="PriceNet" class="col-form-label">Netto</label>
+                <input type="number" asp-for="PriceNet" class="form-control" id="PriceNet" placeholder="0.00" />
+                <span asp-validation-for="PriceNet" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label for="PriceGross" class="col-form-label">Brutto</label>
+                <input type="number" asp-for="PriceGross" class="form-control" id="PriceGross" placeholder="0.00"/>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-md-6">
+                <div class="row">
+                    <partial name="_CreateAndBackToListButton" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+

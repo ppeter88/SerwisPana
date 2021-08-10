@@ -1,0 +1,69 @@
+﻿@model Customer
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" asp-action="View">
+    <div class="backgroundWhite">
+        <h3>
+            <span class="iconify" data-icon="raphael:customer" data-inline="false" data-width="28" data-height="28"></span>
+            Podgląd danych klienta
+        </h3>
+        <br />
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Name" class="col-form-label">Klient</label>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="Name" class="form-control" id="Name" readonly/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Phone" class="col-form-label">Numer telefonu</label>
+            </div>
+            <div class="col-md-4">
+                <input asp-for="Phone" class="form-control" id="Phone" readonly/>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Email" class="col-form-label">Adres e-mail</label>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="EMail" class="form-control" id="Email" readonly/>
+            </div>
+        </div>
+
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Descript" class="col-form-label">Uwagi</label>
+            </div>
+            <div class="col-md-6">
+                <textarea rows="11" asp-for="Descript" class="form-control" id="Descript" readonly></textarea>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-md-6 offset-md-2 offset-lg-3">
+                <partial name="_BackButton" model="Model.Id" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        tinymce.init({
+            selector: "textarea",
+            plugins: "lists",
+            menubar: 'file edit format',
+            readonly: true
+        });
+    </script>
+}
+

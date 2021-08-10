@@ -1,0 +1,198 @@
+﻿@model BikeService.Models.ViewModels.RequestsWithPageNumbers
+@using BikeService.Actions;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string lastUpdatedRequest = AppConfig.LastUpdatedRequestGet();
+    string colorMark = "";
+}
+
+<div class="backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h3>
+                <span class="iconify" data-icon="icons8:services" data-inline="false" data-width="28" data-height="28"></span>&nbsp;
+                Zlecenia serwisowe
+            </h3>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-action="Create" class="btn btn-info">&nbsp;&nbsp;<i class="fas fa-plus"></i>&nbsp;&nbsp;Dodaj&nbsp;&nbsp;</a>
+        </div>
+    </div>
+    <br />
+    <div>
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr align="center" valign="center">
+                    <th>
+                        Symbol
+                    </th>
+                    <th>
+                        Data przyjęcia
+                    </th>
+                    <th>
+                        PRL
+                    </th>
+                    <th>
+                        Rower
+                    </th>
+                    <th>
+                        Realizuje
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Wartość [zł]
+                    </th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Requests)
+                {
+                    @if(lastUpdatedRequest == item.Id.ToString())
+                    {
+                        colorMark = "style=background:#c5e2fc";
+                    }
+                    <tr valign="center" @colorMark>
+                        <td>
+                            @Html.DisplayFor(r => item.Symbol)
+                        </td>
+                        <td align="center">
+                            @Html.DisplayFor(r => item.Date)
+                        </td>
+                        <td align="center">
+                            @if (item.PriorityLine)
+                            {
+                                <span class="iconify" data-icon="flat-color-icons:high-priority" data-inline="false"></span>
+                            }
+                        </td>
+                        <td align="center">
+                            @Html.DisplayFor(r => item.Bike.Name)
+                        </td>
+                        <td align="center">
+                            @if (item.Reporter != 0)
+                            {
+                                @item.EmployeeReporter.Name
+                            }
+                        </td>
+                        <td align="center">
+                            @Html.DisplayFor(r => item.Status.Name)
+                        </td>
+                        <td align="right">
+                            @Html.DisplayFor(r => item.GrossValue)
+                        </td>
+                        <td align="right">
+                            <partial name="_TableButtonPartial" model="item.Id" />
+                        </td>
+                        <td align="right">
+                            <div class="btn-group" role="group" id="changeStatusButtons">
+                                @if (item.StatusId != 1)
+                                {
+                                    <a class="btn btn-light text-dark" data-toggle="modal" data-target="#changeStatus" id="@item.Id.ToString()" onclick="changeStatusButton(this, @item.StatusId.ToString(), 'B')">
+                                        &nbsp;&nbsp;<span class="iconify" data-icon="el:arrow-left" data-inline="false"></span>&nbsp;&nbsp;
+                                    </a>
+                                }
+                                @if (item.StatusId != 4)
+                                {
+                                    <a class="btn btn-light text-dark" data-toggle="modal" data-target="#changeStatus" id="@item.Id.ToString()" onclick="changeStatusButton(this, @item.StatusId.ToString(), 'F')">
+                                        &nbsp;&nbsp;<span class="iconify" data-icon="el:arrow-right" data-inline="false"></span>&nbsp;&nbsp;
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                    @if(colorMark != "")
+                    {
+                        colorMark = "";
+                    }
+                 }
+            </tbody>
+        </table>
+        <div page-model="@Model.PagingInfo" page-classes-enabled="true" page-class="btn border" page-class-normal="btn btn-light" 
+             page-class-selected="btn btn-info active" class="btn-group float-right">
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeStatus" tabindex="-1" role="dialog" aria-labelledby="ChangeStatusLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ChangeStatusLabel">
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <br />
+                    <div class="form-group" id="SelectedRequest" hidden>
+                        <input class="form-control" id="StatusOfRequest" value="" hidden />
+                    </div>
+                    <div class="form-group row offset-1">
+                        <div class="col-md-2 text-right">
+                            <label for="Assignee" class="col-form-label">Realizuje</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="AssigneeList" name="AssigneeList" class="form-control" data-val="false"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row offset-1">
+                        <div class="col-md-2 text-right">
+                            <label for="RequestValue" class="col-form-label">Wartość</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control text-right" id="RequestValue" name="ReqestValue" />
+                        </div>
+                        <div class="col-md-1">
+                            <label for="requestValue" class="col-form-label">zł</label>
+                        </div>
+                    </div>
+                    <div class="form-group row offset-1">
+                        <div class="col-md-2 text-right">
+                            <label for="Descript" class="col-form-label">Zdjęcia</label>
+                        </div>
+                        <div class="col-md-8 parent-container" id="displayPhotosModal">
+
+                        </div>
+                    </div>
+                    <div class="form-group row offset-1">
+                        <div class="col-md-2 text-right">
+                            <label for="Descript" class="col-form-label">Opis</label>
+                        </div>
+                        <div class="col-md-8">
+                            <textarea rows="20" class="form-control" id="Descript" name="Descript"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="ModalButtonsSection">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    @* Pole tekstowe z formatowaniem tekstu *@
+    <script>
+        tinymce.init({
+            selector: "textarea",
+            plugins: "lists",
+            menubar: 'file edit format',
+            height: "400"
+        });
+    </script>
+    <script type="text/javascript" src="~/js/requestMainPage.js"></script>
+
+}
+
+
+

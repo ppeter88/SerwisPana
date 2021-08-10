@@ -1,0 +1,226 @@
+﻿@model BikeService.Models.ViewModels.RequestWithPos
+@using BikeService.Extensions
+@using BikeService.Actions
+@{
+    ViewData["Title"] = "Nowe zlecenie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string requestDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+}
+
+<form method="post" asp-action="Create" enctype="multipart/form-data">
+    <div class="backgroundWhite">
+        <h3>
+            <span class="iconify" data-icon="icons8:services" data-inline="false" data-width="28" data-height="28"></span>&nbsp;
+            Nowe zlecenie
+        </h3>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <br />
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Symbol" class="col-form-label">Symbol</label>
+            </div>
+            <div class="col-md-4">
+                <input value="@Model.ReuestSymbol" class="form-control" id="Symbol" readonly style="background: #ffffff" />
+                <input asp-for="Request.StatusId" value="1" hidden />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Data" class="col-form-label">Data</label>
+            </div>
+            <div class="col-md-4">
+                <input asp-for="Request.Date" value="@requestDate" class="form-control" id="Data" />
+                <span asp-validation-for="Request.Date" class="text-danger"></span>
+            </div>
+        </div>
+        <hr class="offset-3 col-6">
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="CustomerName" class="col-form-label">Klient</label>
+            </div>
+            <div class="sbar col-md-6">
+                <div class="search-input">
+                    <input class="form-control" id="CustomerName" name="CustomerName" type="text" />
+                    <input class="form-control" id="CustomerId" name="CustomerId" type="text" hidden />
+                    <div class="autocom-box" id="autocombo">
+                    </div>
+                    <div class="icon" id="Search"><i class="fas fa-search"></i></div>
+                    <div class="icon" id="Cross" onclick="clearData()" style="color:red;" hidden><i class="fas fa-times"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2" id="BikeNew">
+            <div class="col-md-2 text-right">
+                <label for="Bike" class="col-form-label">Rower</label>
+            </div>
+            <div class="col-md-6">
+                <input class="form-control" id="Bike" name="Bike" />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2" id="BikeSelectList" hidden>
+            <div class="col-md-2 text-right">
+                <label for="Bikes" class="col-form-label">Rower</label>
+            </div>
+            <div class="col-md-5">
+                <select asp-for="Request.BikeId" class="form-control" id="Bikes"></select>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-light text-dark form-control" id="addbike" data-toggle="modal" data-target="#newBikeModal">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="newBikeModal" tabindex="-1" role="dialog" aria-labelledby="newBikeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newBikeModalLabel"><i class="fa fa-bicycle"></i>&nbsp;&nbsp;Dodaj nowy rower</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <br />
+                        <div class="form-group row offset-1">
+                            <div class="col-md-2 text-right">
+                                <label for="NewBike" class="col-form-label">Rower</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" id="NewBike" name="NewBike" />
+                            </div>
+                        </div>
+                        <div class="form-group row offset-1">
+                            <div class="col-md-2 text-right">
+                                <label for="NewBikeDesc" class="col-form-label">Opis</label>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea rows="45" class="form-control" id="NewBikeDesc" name="NewBikeDesc"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light text-dark" data-dismiss="modal">
+                            <i class="fas fa-times"></i>&nbsp;&nbsp;Zamknij
+                        </button>
+                        <button type="button" class="btn btn-success" name="SaveBike" id="SaveBike" data-dismiss="modal">
+                            <i class="far fa-save"></i>&nbsp;&nbsp;Zapisz
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Phone" class="col-form-label">Telefon</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" id="Phone" name="Phone" />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Email" class="col-form-label">E-mail</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" id="Email" name="Email" />
+            </div>
+        </div>
+        <hr class="offset-3 col-6">
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="ReporterId" class="col-form-label">Przyjął</label>
+            </div>
+            <div class="col-md-4">
+                <select id="ReporterId" asp-for="Request.Reporter" asp-items="Model.Reporter.ToSelectListItem(Model.Request.Reporter, 1)" class="form-control" data-val="false"></select>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="AssigneeId" class="col-form-label">Osoba przypisana</label>
+            </div>
+            <div class="col-md-4">
+                <select id="AssigneeId" asp-for="Request.Assignee" asp-items="Model.Reporter.ToSelectListItem(Model.Request.Assignee, 1)" class="form-control" data-val="false"></select>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="PriorityLine" class="col-form-label">Pilne</label>
+            </div>
+            <div class="col-md-1 ">
+                <input asp-for="Request.PriorityLine" class="btn-check form-control" id="PriorityLine" name="PriorityLine" type="checkbox" />
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="custom-file" class="col-form-label">Zdjęcia</label>
+            </div>
+            <div class="col-md-3">
+                <input type="file" name="files" id="real-file" multiple hidden="hidden" />
+                <button type="button" class="btn btn-light text-dark form-control" id="custom-file">
+                    <span class="iconify" data-icon="bx:bx-image-add" data-inline="false" data-width="26" data-height="26"></span>
+                    Dodaj
+                </button>
+            </div>
+            <div class="col-md-3">
+                <span id="custom-file-txt" class="form-control">Nie wybrano pliku</span>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="Descript" class="col-form-label">Uwagi</label>
+            </div>
+            <div class="col-md-6">
+                <textarea rows="13" asp-for="Request.Description" class="form-control" id="Descript"></textarea>
+            </div>
+        </div>
+        <div class="form-group row offset-md-1 offset-lg-2">
+            <div class="col-md-2 text-right">
+                <label for="GrossValue" class="col-form-label">Wartość [zł]</label>
+            </div>
+            <div class="col-md-2">
+                <input pattern="[0-9]+([.][0-9]+)?" asp-for="Request.GrossValue" class="form-control" id="GrossValue" title="W polu wymagana jest wartość liczbowa, separatorem dziesiętnym jest '.'" style="text-align:right">
+            </div>
+        </div>
+        <div class="form-group row">
+            <partial name="_CreateAndBackToListButtonForRequest" />
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+
+    @* Pole tekstowe z formatowaniem tekstu *@
+    <script>
+        tinymce.init({
+            selector: "textarea",
+            plugins: "lists",
+            menubar: 'file edit format'
+        });
+    </script>
+
+    @* Costomowy przycisk do dodawania pliku *@
+    <script type="text/javascript">
+
+        const realFileBtn = document.getElementById("real-file");
+        const customBtn = document.getElementById("custom-file");
+        const customTxt = document.getElementById("custom-file-txt");
+
+        customBtn.addEventListener("click", function () {
+            realFileBtn.click();
+        });
+
+        realFileBtn.addEventListener("change", function () {
+            if (realFileBtn.value) {
+                customTxt.innerHTML = realFileBtn.value.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1];
+            }
+            else {
+                customTxt.innerHTML = "Nie wybrano pliku";
+            }
+        });
+    </script>
+
+    <script type="text/javascript" src="~/js/searchBarScript.js"></script>
+
+}

@@ -1,0 +1,13 @@
+﻿@model int
+
+    <div class="btn-group" role="group">
+        <a class="btn btn-light text-dark" asp-action="Edit" asp-route-Id="@Model">
+            &nbsp;&nbsp;<i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;
+        </a>
+        <a class="btn btn-light text-dark" asp-action="View" asp-route-Id="@Model">
+            &nbsp;&nbsp;<i class="far fa-eye"></i>&nbsp;&nbsp;
+        </a>
+        <a onclick="return confirm('Czy jesteś pewien, że chcesz usunąć pozycję?')" class="btn btn-light text-dark" asp-action="Delete" asp-route-Id="@Model">
+            &nbsp;&nbsp;<i class="far fa-trash-alt"></i>&nbsp;&nbsp;
+        </a>
+    </div>
